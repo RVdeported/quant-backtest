@@ -11,7 +11,7 @@ IF (NOT GTest_FOUND)
   MESSAGE("GTest not found, installing via FetchContent")
   FETCHCONTENT_DECLARE(
     GTest
-    GIT_REPOSITORY git@github.com:google/googletest.git
+    GIT_REPOSITORY https://github.com/google/googletest.git
     GIT_TAG        v1.15.2
   )
 

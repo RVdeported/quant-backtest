@@ -3,7 +3,7 @@
 //! @brief A struct
 struct A
 {
-}
+};
 
 int main()
 {

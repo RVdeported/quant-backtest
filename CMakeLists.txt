@@ -81,6 +81,7 @@ ADD_EXECUTABLE(main main.cpp)
 # Tests (GoogleTest):                                                         #
 #=============================================================================#
 OPTION(BUILD_TESTS "Do build test?" OFF)
+ENABLE_TESTING()
 IF(BUILD_TESTS)
   ADD_SUBDIRECTORY(test)
 ENDIF()
