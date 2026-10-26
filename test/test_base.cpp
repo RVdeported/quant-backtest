@@ -3,6 +3,4 @@
 //===========================================================================//
 #include <gtest/gtest.h>
 
-TEST(FieldSortingTest, OutOfRangePositionFallsBackToDefinitionOrder) {
-  ASSERT_TRUE(true);
-}
+TEST(BaseTests, Assert) { ASSERT_TRUE(true); }

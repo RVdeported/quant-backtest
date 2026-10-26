@@ -5,8 +5,8 @@
 # CMake Settings:                                                             #
 #=============================================================================#
 SET(PROJ_NAME quant-backtest)
-PROJECT($PROJ_NAME LANGUAGES CXX)
 CMAKE_MINIMUM_REQUIRED(VERSION 3.23)
+PROJECT($PROJ_NAME LANGUAGES CXX)
 CMAKE_POLICY(          VERSION 3.23)
 
 IF (NOT UNIX)
@@ -23,7 +23,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 EXECUTE_PROCESS(
   COMMAND bash -c "cd ${CMAKE_SOURCE_DIR} && git rev-parse HEAD"
   OUTPUT_VARIABLE COMMIT)
-STRING(STRIP ${COMMIT_NAME)
+STRING(STRIP ${COMMIT} COMMIT_NAME)
 
 EXECUTE_PROCESS(
   COMMAND bash -c "cd ${CMAKE_SOURCE_DIR} && git rev-parse --abbrev-ref HEAD"
@@ -44,7 +44,7 @@ Commit\t${COMMIT_NAME}\nTime\t${DATE}\n")
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${LIB_DIR}")
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${LIB_DIR}")
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}")
-SET(CXXFLAGS "-freflection" "-std=c++26" "-Wno-deprecated-enum-float-conversion")
+SET(CXXFLAGS "-std=c++26")
 # ==========================================================
 # DISPLAY CONFIGURATIONS
 # ==========================================================
