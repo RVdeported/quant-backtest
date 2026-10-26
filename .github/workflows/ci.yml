@@ -6,7 +6,8 @@
 #   1. Builds the project (C++26, GCC 15, Release)                            #
 #   2. Runs the full test suite (GoogleTest via CTest)                         #
 #   3. Generates the Doxygen documentation (HTML)                              #
-#   4. Publishes a GitHub Release (binary + docs) when a tag is pushed         #
+#   4. Publishes the Doxygen docs to GitHub Pages (on pushes to `master`)      #
+#   5. Publishes a GitHub Release (binary + docs) when a tag is pushed         #
 #=============================================================================#
 
 name: CI
@@ -68,11 +69,14 @@ jobs:
           path: dist/quant-backtest-linux-x86_64
 
   #----------------------------------------------------------------------------#
-  # Job 2: Doxygen documentation                                               #
+  # Job 2: Doxygen documentation (HTML + GitHub Pages artifact)                #
   #----------------------------------------------------------------------------#
   docs:
     name: Doxygen
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pages: write      # required by actions/upload-pages-artifact
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -85,17 +89,47 @@ jobs:
       - name: Generate documentation
         run: doxygen Doxyfile
 
-      - name: Package documentation
+      - name: Package documentation (for release)
         run: tar -czf quant-backtest-docs.tar.gz html/
 
-      - name: Upload documentation
+      - name: Upload documentation artifact (for release)
         uses: actions/upload-artifact@v4
         with:
           name: quant-backtest-docs
           path: quant-backtest-docs.tar.gz
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: html/
+
   #----------------------------------------------------------------------------#
-  # Job 3: Publish GitHub Release (tags only)                                  #
+  # Job 3: Deploy Doxygen docs to GitHub Pages (master pushes only)            #
+  #----------------------------------------------------------------------------#
+  deploy-pages:
+    name: Deploy docs to GitHub Pages
+    if: github.ref == 'refs/heads/master'
+    needs: docs
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  #----------------------------------------------------------------------------#
+  # Job 4: Publish GitHub Release (tags only)                                  #
   #----------------------------------------------------------------------------#
   release:
     name: Publish Release
