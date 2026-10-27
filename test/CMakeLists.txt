@@ -19,7 +19,7 @@ IF (NOT GTest_FOUND)
 ENDIF()
 
 INCLUDE(GoogleTest)
-FOREACH(TEST base) 
+FOREACH(TEST base csv_data_source) 
   ADD_EXECUTABLE(test_${TEST} test_${TEST}.cpp)
 
   # TARGET_INCLUDE_DIRECTORIES(
@@ -27,6 +27,6 @@ FOREACH(TEST base)
   # )
 
   TARGET_COMPILE_OPTIONS(test_${TEST} PRIVATE ${CXXFLAGS})
-  TARGET_LINK_LIBRARIES(test_${TEST} PRIVATE GTest::gtest_main)
+  TARGET_LINK_LIBRARIES(test_${TEST} PRIVATE GTest::gtest_main quant_backtest)
   GTEST_DISCOVER_TESTS(test_${TEST})
 ENDFOREACH()

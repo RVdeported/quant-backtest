@@ -73,9 +73,14 @@ message(STATUS "  CFLAGS:    ${CXXFLAGS}")
 INCLUDE(FetchContent)
 
 #=============================================================================#
-# Build:                                                                      #
+# Build:                                                                       #
 #=============================================================================#
 ADD_EXECUTABLE(main main.cpp)
+
+# Core library (CSV data source stub and future containers):
+ADD_LIBRARY(quant_backtest STATIC src/csv_data_source.cpp)
+TARGET_INCLUDE_DIRECTORIES(quant_backtest PUBLIC ${CMAKE_SOURCE_DIR}/include)
+TARGET_COMPILE_OPTIONS(quant_backtest PRIVATE ${CXXFLAGS})
 
 #=============================================================================#
 # Tests (GoogleTest):                                                         #
@@ -84,6 +89,14 @@ OPTION(BUILD_TESTS "Do build test?" OFF)
 ENABLE_TESTING()
 IF(BUILD_TESTS)
   ADD_SUBDIRECTORY(test)
+ENDIF()
+
+#=============================================================================#
+# Benchmarks (Google Benchmark):                                              #
+#=============================================================================#
+OPTION(BUILD_BENCH "Do build benchmarks?" OFF)
+IF(BUILD_BENCH)
+  ADD_SUBDIRECTORY(bench)
 ENDIF()
 #=============================================================================#
 # Install:                                                                    #
